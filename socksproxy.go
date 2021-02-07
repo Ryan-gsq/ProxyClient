@@ -126,6 +126,10 @@ func (p *socksProxyClient) DialTCPSAddrTimeout(network string, raddr string, tim
 	if err != nil {
 		return nil, fmt.Errorf("无法连接代理服务器 %v ，错误：%v", p.proxyAddr, err)
 	}
+
+	_ = c.SetLinger(5)
+	_ = c.SetNoDelay(true)
+
 	ch := make(chan int)
 
 	// 实际执行部分

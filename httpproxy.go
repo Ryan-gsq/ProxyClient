@@ -118,6 +118,9 @@ func (p *httpProxyClient) DialTCPSAddrTimeout(network string, raddr string, time
 		return nil, fmt.Errorf("无法连接代理服务器 %v ，错误：%v", p.proxyAddr, err)
 	}
 
+	_ = rawConn.SetLinger(5)
+	_ = rawConn.SetNoDelay(true)
+
 	c := Conn(rawConn)
 
 	ch := make(chan int)

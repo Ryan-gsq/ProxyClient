@@ -216,6 +216,7 @@ func (p *httpProxyClient) DialTCPSAddrTimeout(network string, raddr string, time
 		br := bufio.NewReader(c)
 
 		res, err := http.ReadResponse(br, req)
+		res.Body.Close()
 		if err != nil {
 			closed = true
 			c.Close()
@@ -235,9 +236,8 @@ func (p *httpProxyClient) DialTCPSAddrTimeout(network string, raddr string, time
 			ch <- 0
 			return
 		}
-
 		rMutex.Lock()
-		rconn = &httpTCPConn{c, rawConn, tlsConn, net.TCPAddr{}, net.TCPAddr{}, "", "", 0, 0, p, res.Body}
+		rconn = &httpTCPConn{c, rawConn, tlsConn, net.TCPAddr{}, net.TCPAddr{}, "", "", 0, 0, p, rawConn}
 		rMutex.Unlock()
 		ch <- 1
 		return
